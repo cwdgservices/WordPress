@@ -8616,7 +8616,14 @@ AttachmentCompat = View.extend(/** @lends wp.media.view.AttachmentCompat.prototy
 		}
 
 		_.each( this.$el.serializeArray(), function( pair ) {
-			data[ pair.name ] = pair.value;
+			if ( /\[\]$/.test( pair.name ) ) {
+				if ( undefined === data[ pair.name ] ) { 
+					data[ pair.name ] = []; 
+				}
+				data[ pair.name ].push( pair.value );
+			} else { 
+				data[ pair.name ] = pair.value; 
+			}
 		});
 
 		this.controller.trigger( 'attachment:compat:waiting', ['waiting'] );
